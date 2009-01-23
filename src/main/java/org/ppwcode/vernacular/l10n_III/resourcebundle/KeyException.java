@@ -14,10 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 </license>*/
 
-package org.ppwcode.vernacular.resourcebundle_II;
+package org.ppwcode.vernacular.l10n_III.resourcebundle;
 
+import static java.util.Collections.unmodifiableList;
 import static org.ppwcode.metainfo_I.License.Type.APACHE_V2;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import org.ppwcode.metainfo_I.Copyright;
@@ -30,41 +33,46 @@ import org.toryt.annotations_I.MethodContract;
 
 
 /**
- * Exception thrown if the value for a given key in a resource bundle
- * is not of an expected type.
+ * Super type for exceptions that carry a {@link ResourceBundle}
+ * and a key.
  *
  * @author Jan Dockx
  * @author PeopleWare n.v.
  */
-@Copyright("2004 - $Date: 2008-09-29 18:21:16 +0200 (Mon, 29 Sep 2008) $, PeopleWare n.v.")
+@Copyright("2004 - $Date$, PeopleWare n.v.")
 @License(APACHE_V2)
-@SvnInfo(revision = "$Revision: 2727 $",
-         date     = "$Date: 2008-09-29 18:21:16 +0200 (Mon, 29 Sep 2008) $")
+@SvnInfo(revision = "$Revision$",
+         date     = "$Date$")
 @Invars(@Expression("message == null"))
-public class WrongValueTypeException extends KeyException {
+public abstract class KeyException extends ResourceBundleException {
 
   @MethodContract(post = {
     @Expression("resourceBundle == _resourceBundle"),
-    @Expression("key == _key"),
-    @Expression("expectedValueType == _expectedValueType"),
-    @Expression("value == _value"),
+    @Expression("keys == _key"),
     @Expression("cause == null")
   })
-  public WrongValueTypeException(ResourceBundle resourceBundle, String key, Class<?> expectedValueType, Object value) {
-    this(resourceBundle, key, expectedValueType, value, null);
+  protected KeyException(ResourceBundle resourceBundle, String... key) {
+    this(new ResourceBundle[] {resourceBundle}, key, null);
   }
 
   @MethodContract(post = {
     @Expression("resourceBundle == _resourceBundle"),
-    @Expression("key == _key"),
-    @Expression("expectedValueType == _expectedValueType"),
-    @Expression("value == _value"),
+    @Expression("keys == _keys"),
     @Expression("cause == _cause")
   })
-  public WrongValueTypeException(ResourceBundle resourceBundle, String key, Class<?> expectedValueType, Object value, Throwable cause) {
-    super(resourceBundle, key, cause);
-    $expectedValueType = expectedValueType;
-    $value = value;
+  protected KeyException(ResourceBundle resourceBundles[], String[] keys, Throwable cause) {
+    super(cause);
+    $resourceBundles = unmodifiableList(Arrays.asList(resourceBundles));
+    $keys = unmodifiableList(Arrays.asList(keys));
+  }
+
+  @MethodContract(post = {
+    @Expression("resourceBundle == _resourceBundle"),
+    @Expression("keys == {_key}"),
+    @Expression("cause == _cause")
+  })
+  protected KeyException(ResourceBundle resourceBundle, String key, Throwable cause) {
+    this(new ResourceBundle[] {resourceBundle}, new String[] {key}, cause);
   }
 
 
@@ -72,11 +80,11 @@ public class WrongValueTypeException extends KeyException {
   //------------------------------------------------------------------
 
   @Basic
-  public final Class<?> getExpectedValueType() {
-    return $expectedValueType;
+  public final List<ResourceBundle> getResourceBundles() {
+    return $resourceBundles;
   }
 
-  private Class<?> $expectedValueType;
+  private List<ResourceBundle> $resourceBundles;
 
   /* </property> */
 
@@ -86,11 +94,11 @@ public class WrongValueTypeException extends KeyException {
   //------------------------------------------------------------------
 
   @Basic
-  public final Object getValue() {
-    return $value;
+  public final List<String> getKeys() {
+    return $keys;
   }
 
-  private Object $value;
+  private List<String> $keys;
 
   /* </property> */
 

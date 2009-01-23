@@ -14,36 +14,63 @@ See the License for the specific language governing permissions and
 limitations under the License.
 </license>*/
 
-package org.ppwcode.vernacular.resourcebundle_II;
+package org.ppwcode.vernacular.l10n_III.resourcebundle;
 
 import static org.ppwcode.metainfo_I.License.Type.APACHE_V2;
+
+import java.util.ResourceBundle;
 
 import org.ppwcode.metainfo_I.Copyright;
 import org.ppwcode.metainfo_I.License;
 import org.ppwcode.metainfo_I.vcs.SvnInfo;
+import org.toryt.annotations_I.Basic;
 import org.toryt.annotations_I.Expression;
+import org.toryt.annotations_I.Invars;
 import org.toryt.annotations_I.MethodContract;
 
 
 /**
- * Super type for exceptions thrown by code in this library.
+ * Exception thrown if a applicable {@link ResourceBundle} cannot be found.
  *
  * @author Jan Dockx
  * @author PeopleWare n.v.
  */
-@Copyright("2004 - $Date: 2008-09-29 18:21:16 +0200 (Mon, 29 Sep 2008) $, PeopleWare n.v.")
+@Copyright("2004 - $Date$, PeopleWare n.v.")
 @License(APACHE_V2)
-@SvnInfo(revision = "$Revision: 2727 $",
-         date     = "$Date: 2008-09-29 18:21:16 +0200 (Mon, 29 Sep 2008) $")
-public abstract class ResourceBundleException extends Exception {
+@SvnInfo(revision = "$Revision$",
+         date     = "$Date$")
+@Invars(@Expression("message == null"))
+public class ResourceBundleNotFoundException extends ResourceBundleException {
 
   @MethodContract(post = {
-    @Expression("message == null"),
+    @Expression("basename == _basename"),
+    @Expression("cause == null")
+  })
+  public ResourceBundleNotFoundException(String basename) {
+    this(basename, null);
+  }
+
+  @MethodContract(post = {
+    @Expression("basename == _basename"),
     @Expression("cause == _cause")
   })
-  protected ResourceBundleException(Throwable cause) {
+  public ResourceBundleNotFoundException(String basename, Throwable cause) {
     super(cause);
+    $basename = basename;
   }
+
+
+  /* <property name="locale"> */
+  //------------------------------------------------------------------
+
+  @Basic
+  public final String getBasename() {
+    return $basename;
+  }
+
+  private String $basename;
+
+  /* </property> */
 
 }
 

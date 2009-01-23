@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 </license>*/
 
-package org.ppwcode.vernacular.resourcebundle_II;
+package org.ppwcode.vernacular.l10n_III.resourcebundle;
 
 
 import static org.ppwcode.metainfo_I.License.Type.APACHE_V2;
 import static org.ppwcode.util.reflect_I.TypeHelpers.directSuperTypes;
-import static org.ppwcode.vernacular.exception_II.ProgrammingErrors.preArgumentNotNull;
+import static org.ppwcode.util.exception_III.ProgrammingErrorHelpers.preArgumentNotNull;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -81,11 +81,10 @@ public final class ResourceBundleHelpers {
   }
 
   /**
-   * The value of type {@code valueType} of associated with the first key from {@code keys} that is found in
+   * The value of type {@code valueType} associated with the first key from {@code keys} that is found in
    * the resource bundle with the same basename as the FQCN of {@code type} or one of its super types.
    *
    * @mudo contract
-   * @mudo unit tests
    */
   public static <_T_> _T_ value(Class<?> type, String[] keys, Class<_T_> valueType, ResourceBundleLoadStrategy rbls)
       throws WrongValueTypeException, KeyNotFoundException {
@@ -125,8 +124,6 @@ public final class ResourceBundleHelpers {
    * resource bundle {@code rb}.
    * Throws an exceptions if no such key is found in the resource bundle, or the found value associated with
    * the first key found is of a different type.
-   *
-   * @mudo unit tests
    */
   @MethodContract(
     pre  = {
@@ -171,8 +168,6 @@ public final class ResourceBundleHelpers {
    * The value associated with key {@code key} in resource bundle {@code rb} of type {@code valueType}.
    * Throws exceptions if no such key is found in the resource bundle, or the found value associated with
    * the key is of a different type.
-   *
-   * @mudo unit tests
    */
   @MethodContract(
     pre  = {
